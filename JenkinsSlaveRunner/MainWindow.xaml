@@ -1,0 +1,49 @@
+﻿<Window x:Class="JenkinsSlaveRunner.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Jenkins Slave Runner" Height="auto" Width="auto"
+        Closing="Window_Closing">
+    <Grid VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="43" />
+        </Grid.RowDefinitions>
+        <GroupBox Header="Configuration" Grid.Row="0" Margin="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="23"/>
+                    <RowDefinition Height="23"/>
+                    <RowDefinition Height="23"/>
+                    <RowDefinition Height="23"/>
+                    <RowDefinition Height="23"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" Content="Java Executable:" />
+                <Label Grid.Row="1" Grid.Column="0" Content="Jenkins Master URL:" />
+                <Label Grid.Row="2" Grid.Column="0" Content="Slave Name:" />
+                <Label Grid.Row="3" Grid.Column="0" Content="Secret:" />
+                <Label Grid.Row="4" Grid.Column="0" Content="Arguments:" />
+                <TextBox Name="JavaPath"  Grid.Row="0" Grid.Column="1" IsEnabled="False" Grid.ColumnSpan="2"/>
+                <TextBox Name="JenkinsUrl" Grid.Row="1" Grid.Column="1" />
+                <TextBox Name="SlaveName" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" />
+                <TextBox Name="Secret" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" />
+                <TextBox Name="Arguments" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" />
+                <Button Name="DownloadSlaveJar" Content="Download slave.jar" Click="DownloadSlaveJar_OnClick_Click" Grid.Row="1" Grid.Column="2"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Output" Grid.Row="1" Margin="10">
+            <ListBox Name="OutputLog" IsEnabled="False"/>
+        </GroupBox>
+        <StackPanel Grid.Row="2" Margin="10" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Name="btnStart" Content="Start" Width="75" Click="btnStart_Click" Margin="0,0,10,0"/>
+            <Button Name="btnStop" Content="Stop"  Width="75" Click="btnStop_Click" />
+        </StackPanel>
+
+
+    </Grid>
+</Window>
