@@ -144,6 +144,11 @@ namespace JenkinsSlaveRunner
                 {
                     OutputLog.Items.RemoveAt(0);
                 }
+                if (OutputLog.Items.Count > 0)
+                {
+                    OutputLog.SelectedIndex = OutputLog.Items.Count - 1;
+                    OutputLog.ScrollIntoView(OutputLog.SelectedItem);
+                }
             }
         }
 
@@ -187,6 +192,8 @@ namespace JenkinsSlaveRunner
 
             if (File.Exists(ConfigFile) == false)
             {
+                // default the machine name here
+                SlaveName.Text = Environment.MachineName;
                 return;
             }
 
