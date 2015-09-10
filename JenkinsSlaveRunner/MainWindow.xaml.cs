@@ -37,7 +37,6 @@ namespace JenkinsSlaveRunner
         /// </summary>
         private SlaveExecutor _slaveExecutor;
 
-
         /// <summary>
         ///     Initializes a new instance of the JenkinsSlaveRunner.MainWindow class.
         /// </summary>
@@ -103,7 +102,7 @@ namespace JenkinsSlaveRunner
         /// <summary>
         ///     Starts this object.
         /// </summary>
-        private void Start()
+        public void Start()
         {
             if (String.IsNullOrEmpty(JavaPath.Text))
             {
