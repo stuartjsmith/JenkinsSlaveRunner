@@ -45,5 +45,13 @@ namespace JenkinsSlaveRunner
         /// The arguments.
         /// </value>
         public string Arguments { get; set; }
+
+        /// <summary>
+        /// Gets or sets the identifier of the process.
+        /// </summary>
+        /// <value>
+        /// The identifier of the process.
+        /// </value>
+        public int ProcessId { get; set; }
     }
 }

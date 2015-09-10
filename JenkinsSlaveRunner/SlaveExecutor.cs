@@ -8,7 +8,6 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
-using System.Windows.Markup;
 
 namespace JenkinsSlaveRunner
 {
@@ -17,6 +16,8 @@ namespace JenkinsSlaveRunner
     /// </summary>
     /// <param name="s">The string.</param>
     public delegate void LogMessageDelegate(string s);
+
+    public delegate void JenkinsRunningDeletegate(JenkinsSlaveConfiguration config);
 
     /// <summary>
     /// A slave executor.
@@ -29,6 +30,11 @@ namespace JenkinsSlaveRunner
         public LogMessageDelegate OnLogMessage;
 
         /// <summary>
+        /// The On Jenkins started event.
+        /// </summary>
+        public JenkinsRunningDeletegate OnJenkinsStarted;
+
+        /// <summary>
         /// The jenkins process.
         /// </summary>
         private Process _jenkinsProcess;
@@ -36,7 +42,7 @@ namespace JenkinsSlaveRunner
         /// <summary>
         /// The jenkins slave configuration.
         /// </summary>
-        private JenkinsSlaveConfiguration _jenkinsSlaveConfiguration;
+        private readonly JenkinsSlaveConfiguration _jenkinsSlaveConfiguration;
 
         /// <summary>
         /// Initializes a new instance of the JenkinsSlaveRunner.SlaveExecutor class.
@@ -82,8 +88,14 @@ namespace JenkinsSlaveRunner
             _jenkinsProcess.OutputDataReceived += JenkinsProcessOnDataReceived;
             _jenkinsProcess.ErrorDataReceived += JenkinsProcessOnDataReceived;
             _jenkinsProcess.Start();
+            config.ProcessId = _jenkinsProcess.Id;
             _jenkinsProcess.BeginOutputReadLine();
             _jenkinsProcess.BeginErrorReadLine();
+
+            if (OnJenkinsStarted != null)
+            {
+                OnJenkinsStarted(config);
+            }
             _jenkinsProcess.WaitForExit();
         }
 
