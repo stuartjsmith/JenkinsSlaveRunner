@@ -199,6 +199,16 @@ namespace JenkinsSlaveRunner
         /// <param name="e">Cancel event information.</param>
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+            if (_slaveExecutor != null)
+            {
+                string msg = "Are you sure you wish to stop the (interactive) Jenkins Slave on this machine? ";
+                if (Interaction.ConfirmStopJenkinsSlave(msg) == false)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+            }
+            
             Stop();
         }
 

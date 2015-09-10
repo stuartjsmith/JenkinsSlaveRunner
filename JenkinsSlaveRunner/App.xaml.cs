@@ -25,10 +25,7 @@ namespace JenkinsSlaveRunner
                 string.Format(
                     "{0}. Are you sure you wish to log off/shutdown? This will stop the (interactive) Jenkins Slave on this machine and you will need to log in again to restart it.",
                     e.ReasonSessionEnding);
-            MessageBoxResult result = MessageBox.Show(msg, "Stop Jenkins Slave?", MessageBoxButton.YesNo);
-
-            // End session, if specified 
-            if (result == MessageBoxResult.No)
+            if (Interaction.ConfirmStopJenkinsSlave(msg) == false)
             {
                 e.Cancel = true;
             }

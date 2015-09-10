@@ -57,6 +57,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Interaction.cs" />
     <Compile Include="JavaInstallation.cs" />
     <Compile Include="JenkinsSlaveConfiguration.cs" />
     <Compile Include="SlaveExecutor.cs" />
