@@ -128,16 +128,23 @@ namespace JenkinsSlaveRunner
         {
             LogMessage("The Jenkins process has started under Process ID " + config.ProcessId);
             SerializeSlaveConfig(config);
-            while (true)
+            Thread t = new Thread(PollForExit);
+            t.Start(config.ProcessId);            
+        }
+
+        private void PollForExit(object obj)
+        {
+            int processId = (int) obj;
+            while (_slaveExecutor != null)
             {
                 try
                 {
-                    Process.GetProcessById(config.ProcessId);
+                    Process.GetProcessById(processId);
                     Thread.Sleep(5000);
                 }
                 catch (ArgumentException)
                 {
-                    LogMessage("Oooops, it looks like the Jenkins process with ID " + config.ProcessId + " has stopped");
+                    LogMessage("Oooops, it looks like the Jenkins process with ID " + processId + " has stopped");
                     return;
                 }
             }
