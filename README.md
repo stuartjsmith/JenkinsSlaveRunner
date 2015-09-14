@@ -20,6 +20,13 @@ Once you have configured it, click on 'Download Slave.jar' to obtain the Jar fil
 
 You can now click on Start and Stop to start your Jenkins Slave
 
+Command Line Parameters
+=======================
+The only currently available command line parameter is /Autostart e.g. 
+
+JenkinsSlaveRunner.exe /Autostart
+
+Providing you have succesfully started your slave process using this tool previously, and therefore have a slave.jar downloaded and an exe.config file, then the Jenkins slave will start automatically using the previous settings on application startup.
 Other Info
 ==========
 Your settings are serialized out into a SlaveConfig.xml file alongside the application and will be loaded in on application start.
