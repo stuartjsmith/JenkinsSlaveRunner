@@ -129,7 +129,8 @@ namespace JenkinsSlaveRunner
             LogMessage("The Jenkins process has started under Process ID " + config.ProcessId);
             SerializeSlaveConfig(config);
             Thread t = new Thread(PollForExit);
-            t.Start(config.ProcessId);            
+            t.Start(config.ProcessId);
+            SetUiForRunningState(true);
         }
 
         private void PollForExit(object obj)
@@ -144,6 +145,7 @@ namespace JenkinsSlaveRunner
                 }
                 catch (ArgumentException)
                 {
+                    SetUiForRunningState(false);
                     LogMessage("Oooops, it looks like the Jenkins process with ID " + processId + " has stopped");
                     return;
                 }
@@ -158,6 +160,26 @@ namespace JenkinsSlaveRunner
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
             Stop();
+        }
+
+        /// <summary>
+        /// Sets user interface for running state.
+        /// </summary>
+        /// <param name="isRunningState">true if this object is running state.</param>
+        private void SetUiForRunningState(bool isRunningState)
+        {
+            if (!Dispatcher.CheckAccess())
+            {
+                // Need for invoke if called from a different thread
+                Dispatcher.BeginInvoke(
+                    DispatcherPriority.Normal, (ThreadStart)delegate { SetUiForRunningState(isRunningState); });
+            }
+            else
+            {
+                btnStop.IsEnabled = isRunningState;
+                btnStart.IsEnabled = !isRunningState;
+                DownloadSlaveJar.IsEnabled = !isRunningState;
+            }
         }
 
         /// <summary>
@@ -179,6 +201,7 @@ namespace JenkinsSlaveRunner
                 _slaveExecutor = null;
             }
             LogMessage("Jenkins has stopped");
+            SetUiForRunningState(false);
         }
 
         /// <summary>
