@@ -145,9 +145,7 @@ namespace JenkinsSlaveRunner
                 }
                 catch (ArgumentException)
                 {
-                    SetUiForRunningState(false);
-                    LogMessage("Oooops, it looks like the Jenkins process with ID " + processId + " has stopped");
-                    return;
+                    Stop();
                 }
             }
         }
