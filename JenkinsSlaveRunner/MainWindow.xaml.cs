@@ -176,7 +176,11 @@ namespace JenkinsSlaveRunner
             {
                 btnStop.IsEnabled = isRunningState;
                 btnStart.IsEnabled = !isRunningState;
-                DownloadSlaveJar.IsEnabled = !isRunningState;
+                DownloadSlaveJar.IsEnabled = !isRunningState;                
+                JenkinsUrl.IsEnabled = !isRunningState;
+                SlaveName.IsEnabled = !isRunningState;
+                Secret.IsEnabled = !isRunningState;
+                Arguments.IsEnabled = !isRunningState;
             }
         }
 
