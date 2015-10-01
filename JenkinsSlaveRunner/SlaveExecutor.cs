@@ -119,7 +119,7 @@ namespace JenkinsSlaveRunner
         internal void Go()
         {
             var thread = new Thread(RunJenkinsSlave);
-            thread.Start(new object[] {@"C:\ProgramData\Oracle\Java\javapath\java.exe", _jenkinsSlaveConfiguration});
+            thread.Start(new object[] {JavaInstallation.JavaExe, _jenkinsSlaveConfiguration });
         }
 
         /// <summary>
