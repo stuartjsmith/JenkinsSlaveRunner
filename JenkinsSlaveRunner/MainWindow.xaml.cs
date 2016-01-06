@@ -13,6 +13,7 @@ using System.Net;
 using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace JenkinsSlaveRunner
@@ -178,7 +179,7 @@ namespace JenkinsSlaveRunner
                 btnStart.IsEnabled = !isRunningState;
                 DownloadSlaveJar.IsEnabled = !isRunningState;                
                 JenkinsUrl.IsEnabled = !isRunningState;
-                SlaveName.IsEnabled = !isRunningState;
+                SlavesComboBox.IsEnabled = !isRunningState;
                 Secret.IsEnabled = !isRunningState;
                 Arguments.IsEnabled = !isRunningState;
             }
@@ -274,7 +275,7 @@ namespace JenkinsSlaveRunner
         {
             var config = new JenkinsSlaveConfiguration();
             config.JenkinsUrl = JenkinsUrl.Text;
-            config.SlaveName = SlaveName.Text;
+            config.SlaveName = SlavesComboBox.Text;
             config.Secret = Secret.Text;
             config.Arguments = Arguments.Text;
             return config;
@@ -290,7 +291,7 @@ namespace JenkinsSlaveRunner
             if (File.Exists(ConfigFile) == false)
             {
                 // default the machine name here
-                SlaveName.Text = Environment.MachineName;
+                SlavesComboBox.Text = Environment.MachineName.ToLower();
                 return;
             }
 
@@ -301,7 +302,7 @@ namespace JenkinsSlaveRunner
                 if (config != null)
                 {
                     JenkinsUrl.Text = config.JenkinsUrl;
-                    SlaveName.Text = config.SlaveName;
+                    SlavesComboBox.Text = config.SlaveName;
                     Secret.Text = config.Secret;
                     Arguments.Text = config.Arguments;
                     if (config.ProcessId > 0)
@@ -317,7 +318,7 @@ namespace JenkinsSlaveRunner
         /// </summary>
         /// <param name="sender">Source of the event.</param>
         /// <param name="e">Routed event information.</param>
-        private void DownloadSlaveJar_OnClick_Click(object sender, RoutedEventArgs e)
+        private void DownloadSlaveJar_OnClick(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -339,6 +340,41 @@ namespace JenkinsSlaveRunner
             {
                 LogMessage(ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Event handler. Called by Populate for on click events.
+        /// </summary>
+        /// <param name="sender">Source of the event.</param>
+        /// <param name="e">Routed event information.</param>
+        private void Populate_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                SlavesComboBox.Items.Clear();
+                string s;
+                string url = JenkinsUrl.Text + "/computer/api/xml";
+                using (WebClient client = new WebClient())
+                {
+                    s = client.DownloadString(url);
+                }
+
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(s);
+                XmlNodeList nodes = doc.SelectNodes("/computerSet/computer/displayName");
+                foreach (XmlNode node in nodes)
+                {
+                    SlavesComboBox.Items.Add(node.InnerText);
+                }
+                LogMessage("Populated Slave Name Selection based on information from " + JenkinsUrl.Text);
+            }
+            catch (Exception ex)
+            {
+                LogMessage(
+                    "Something went wrong - please check that the URL specified in the Jenkins Master URL field is correct. The full exception text is:" +
+                    Environment.NewLine + ex.Message);
+            }
+            
         }
     }
 }

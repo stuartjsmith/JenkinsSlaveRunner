@@ -31,10 +31,11 @@
                 <Label Grid.Row="4" Grid.Column="0" Content="Arguments:" ToolTip="Any additional parameters to supply to the Java process" />
                 <TextBox Name="JavaPath"  Grid.Row="0" Grid.Column="1" IsEnabled="False" Grid.ColumnSpan="2"/>
                 <TextBox Name="JenkinsUrl" Grid.Row="1" Grid.Column="1" />
-                <TextBox Name="SlaveName" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" />
+                <ComboBox Name="SlavesComboBox" Grid.Row="2" Grid.Column="1" IsEditable="True"/>
                 <TextBox Name="Secret" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" />
                 <TextBox Name="Arguments" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" />
-                <Button Name="DownloadSlaveJar" Content="Download slave.jar" Click="DownloadSlaveJar_OnClick_Click" Grid.Row="1" Grid.Column="2" ToolTip="Download the latest Slave.jar from the Master Jenkins server"/>
+                <Button Name="DownloadSlaveJar" Content="Download slave.jar" Click="DownloadSlaveJar_OnClick" Grid.Row="1" Grid.Column="2" ToolTip="Download the latest Slave.jar from the Master Jenkins server"/>
+                <Button x:Name="Populate" Content="Populate" Click="Populate_OnClick" Grid.Row="2" Grid.Column="2" ToolTip="Populate the list of available nodes based on the Master URL"/>
             </Grid>
         </GroupBox>
         <GroupBox Header="Output" Grid.Row="1" Margin="10">
@@ -44,7 +45,5 @@
             <Button Name="btnStart" Content="Start" Width="75" Click="btnStart_Click" Margin="0,0,10,0"/>
             <Button Name="btnStop" Content="Stop"  Width="75" Click="btnStop_Click" IsEnabled="False" />
         </StackPanel>
-
-
     </Grid>
 </Window>
