@@ -180,6 +180,7 @@ namespace JenkinsSlaveRunner
                 DownloadSlaveJar.IsEnabled = !isRunningState;                
                 JenkinsUrl.IsEnabled = !isRunningState;
                 SlavesComboBox.IsEnabled = !isRunningState;
+                Populate.IsEnabled = !isRunningState;
                 Secret.IsEnabled = !isRunningState;
                 Arguments.IsEnabled = !isRunningState;
             }
