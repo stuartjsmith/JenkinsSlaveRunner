@@ -144,8 +144,9 @@ namespace JenkinsSlaveRunner
                     Process.GetProcessById(processId);
                     Thread.Sleep(5000);
                 }
-                catch (ArgumentException)
+                catch (ArgumentException ex)
                 {
+                    LogMessage(ex.Message);
                     Stop();
                 }
             }
@@ -158,7 +159,7 @@ namespace JenkinsSlaveRunner
         /// <param name="e">Routed event information.</param>
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
-            Stop();
+            Stop(true);
         }
 
         /// <summary>
@@ -177,7 +178,7 @@ namespace JenkinsSlaveRunner
             {
                 btnStop.IsEnabled = isRunningState;
                 btnStart.IsEnabled = !isRunningState;
-                DownloadSlaveJar.IsEnabled = !isRunningState;                
+                DownloadSlaveJar.IsEnabled = !isRunningState;
                 JenkinsUrl.IsEnabled = !isRunningState;
                 SlavesComboBox.IsEnabled = !isRunningState;
                 Populate.IsEnabled = !isRunningState;
@@ -187,9 +188,10 @@ namespace JenkinsSlaveRunner
         }
 
         /// <summary>
-        ///     Stops this object.
+        /// Stops this object.
         /// </summary>
-        private void Stop()
+        /// <param name="userRequested">true if user requested.</param>
+        private void Stop(bool userRequested = false)
         {
             if (_slaveExecutor != null)
             {
@@ -204,7 +206,8 @@ namespace JenkinsSlaveRunner
                 _slaveExecutor.Stop();
                 _slaveExecutor = null;
             }
-            LogMessage("Jenkins has stopped");
+            LogMessage("Stop Jenkins " + (userRequested? "" : "not ") + "requested by User");
+            LogMessage("*** Jenkins has stopped ***");
             SetUiForRunningState(false);
         }
 
