@@ -39,6 +39,8 @@ namespace JenkinsSlaveRunner
             // Application is running
             // Process command line args
             bool autoStart = false;
+            bool restarted = false;
+
             for (int i = 0; i != e.Args.Length; ++i)
             {
                 if (e.Args[i] == "/Autostart")
@@ -55,11 +57,18 @@ namespace JenkinsSlaveRunner
                     MessageBox.Show(message.ToString(), "Usage", MessageBoxButton.OK, MessageBoxImage.Information);
                     Environment.Exit(0);
                 }
+
+                if(e.Args[i] == "/Restarted")
+                {
+                    restarted = true;
+                }
             }
 
             // Create main application window, starting minimized if specified
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
+            mainWindow._autoStart = autoStart;
+            mainWindow._restarted = restarted;
             if (autoStart)
             {
                 mainWindow.Start();

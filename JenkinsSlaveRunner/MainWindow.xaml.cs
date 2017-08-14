@@ -9,7 +9,9 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
@@ -23,6 +25,9 @@ namespace JenkinsSlaveRunner
     /// </content>
     public partial class MainWindow : Window
     {
+        internal bool _autoStart;
+        internal bool _restarted;
+
         /// <summary>
         ///     The log maximum lines.
         /// </summary>
@@ -115,10 +120,40 @@ namespace JenkinsSlaveRunner
             // write out the latest settings
             JenkinsSlaveConfiguration config = CreateJenkinsSlaveConfiguration();
             OutputLog.Items.Clear();
-            _slaveExecutor = new SlaveExecutor(config);
-            _slaveExecutor.OnLogMessage += LogMessage;
-            _slaveExecutor.OnJenkinsStarted += JenkinsStarted;
-            _slaveExecutor.Go();
+            if(_autoStart && !_restarted)
+            {
+                OutputLog.Items.Add("Autostart flag was specified, attempting automatic startup");
+            }
+            bool doStart = true;
+            if (_restarted)
+            {
+                // clear this flag, we don't care any more and don't want this block to execute 
+                // again should the user manually stop and restart in this same session
+                _restarted = false;
+                string processName = Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().Location);
+                OutputLog.Items.Add(string.Format("{0} restarted, please make yourself comfortable and prepare for take-off", processName));
+                int count = 0;
+                while (Process.GetProcessesByName(processName).Count() > 1)
+                {
+
+                    if (count > 5)
+                    {
+                        doStart = false;
+                        OutputLog.Items.Add("They didn't exit, I'm giving up");
+                        break;
+                    }
+                    OutputLog.Items.Add(string.Format("Waiting for other instances of {0} to exit", processName));
+                    Thread.Sleep(10000);
+                    count++;
+                }
+            }
+            if (doStart)
+            {
+                _slaveExecutor = new SlaveExecutor(config);
+                _slaveExecutor.OnLogMessage += LogMessage;
+                _slaveExecutor.OnJenkinsStarted += JenkinsStarted;
+                _slaveExecutor.Go();
+            }
         }
 
         /// <summary>
@@ -209,6 +244,10 @@ namespace JenkinsSlaveRunner
             LogMessage("Stop Jenkins " + (userRequested? "" : "not ") + "requested by User");
             LogMessage("*** Jenkins has stopped ***");
             SetUiForRunningState(false);
+            if(userRequested == false)
+            {
+                RestartApplication();
+            }
         }
 
         /// <summary>
@@ -258,7 +297,7 @@ namespace JenkinsSlaveRunner
                 }
             }
             
-            Stop();
+            Stop(true);
         }
 
         /// <summary>
@@ -379,6 +418,29 @@ namespace JenkinsSlaveRunner
                     Environment.NewLine + ex.Message);
             }
             
+        }
+
+        /// <summary>
+        /// handler for restart button click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnRestart_Click(object sender, RoutedEventArgs e)
+        {
+            RestartApplication(true);
+        }
+
+        /// <summary>
+        /// Restarts the application
+        /// </summary>
+        /// <param name="requested">whether this was a user requested restart or an automatic one</param>
+        private void RestartApplication(bool requested = false)
+        {
+            Process p = new Process();
+            p.StartInfo.FileName = Assembly.GetExecutingAssembly().Location;
+            p.StartInfo.Arguments = "/Autostart /Restarted";
+            p.Start();
+            Environment.Exit(requested? 0 : 1);
         }
     }
 }
