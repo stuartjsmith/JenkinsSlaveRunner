@@ -5,6 +5,8 @@ This application replaces the need to use a DOS window to launch a Jenkins slave
 
 It is a WPF application (requires .Net 4.5) and has a simple UI.
 
+![Jenkins Slave Runner](JenkinsSlaveRunner.png?raw=true "Jenkins Slave Runner UI")
+
 Usage
 =====
 * Copy the application into the directory that is going to be your Jenkins root e.g. c:\Jenkins
