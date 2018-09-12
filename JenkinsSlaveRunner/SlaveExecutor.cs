@@ -69,7 +69,7 @@ namespace JenkinsSlaveRunner
             JenkinsSlaveConfiguration config = slaveParams[1] as JenkinsSlaveConfiguration;
 
             string jnlpUrl = config.JenkinsUrl.Trim(new[] {'/'}).Trim() + "/computer/" + config.SlaveName.Trim() + "/slave-agent.jnlp";
-            string arguments = "-jar slave.jar "+ config.Arguments + " -jnlpUrl " + jnlpUrl + " -secret " + config.Secret;
+            string arguments = config.Arguments + " -jar slave.jar " + " -jnlpUrl " + jnlpUrl + " -secret " + config.Secret;
 
             _jenkinsProcess = new Process();
 
