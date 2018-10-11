@@ -12,7 +12,7 @@ Usage
 * Copy the application into the directory that is going to be your Jenkins root e.g. c:\Jenkins
 * Double Click to start it
 * Fill out all the necessary fields
- * The Java path is detected automatically on application start-up based on your registry settings - this is currently non-editable.
+ * The Java path is detected automatically on application start-up based on your registry settings, with a fallback to the JAVA_HOME environment variable.
  * The Jenkins Master URL should be of the form e.g. http://ci.jenkins-ci.org or http://jenkins.mycompany.com:8080
  * The Slave Name should be the name of the slave that you have configured in the Jenkins Web UI
  * The Secret should be the secret key that is generated - this can also be found in the Web UI under the Slave Configuration

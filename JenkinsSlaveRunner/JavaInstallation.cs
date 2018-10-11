@@ -4,6 +4,8 @@
 // <author>Stuart. Smith</author>
 // <date>05/08/2015</date>
 // <summary>Implements the java installation class</summary>
+
+using System;
 using System.IO;
 using Microsoft.Win32;
 
@@ -18,6 +20,8 @@ namespace JenkinsSlaveRunner
         /// The java key.
         /// </summary>
         private const string JavaKey = "SOFTWARE\\JavaSoft\\Java Runtime Environment\\";
+
+        private const string JavaHomeEvarKey = "JAVA_HOME";
 
         /// <summary>
         /// Gets the java home.
@@ -34,6 +38,12 @@ namespace JenkinsSlaveRunner
                 {
                     javaHome = ReadJavaHomeFromRegistry(JavaKey, RegistryView.Registry64);
                 }
+
+                if (string.IsNullOrEmpty(javaHome))
+                {
+                    javaHome = Environment.GetEnvironmentVariable(JavaHomeEvarKey);
+                }
+
                 return javaHome;
             }
         }
