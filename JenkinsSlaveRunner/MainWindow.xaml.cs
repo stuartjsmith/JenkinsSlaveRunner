@@ -115,6 +115,7 @@ namespace JenkinsSlaveRunner
             // write out the latest settings
             JenkinsSlaveConfiguration config = CreateJenkinsSlaveConfiguration();
             OutputLog.Items.Clear();
+            DoDownloadSlaveJar();
             _slaveExecutor = new SlaveExecutor(config);
             _slaveExecutor.OnLogMessage += LogMessage;
             _slaveExecutor.OnJenkinsStarted += JenkinsStarted;
@@ -324,9 +325,14 @@ namespace JenkinsSlaveRunner
         /// <param name="e">Routed event information.</param>
         private void DownloadSlaveJar_OnClick(object sender, RoutedEventArgs e)
         {
+            DoDownloadSlaveJar();
+        }
+
+        private void DoDownloadSlaveJar()
+        {
             try
             {
-                string slaveUrl = JenkinsUrl.Text.Trim(new[] {'/'}).Trim() + "/jnlpJars/slave.jar";
+                string slaveUrl = JenkinsUrl.Text.Trim(new[] { '/' }).Trim() + "/jnlpJars/slave.jar";
                 Uri uri;
                 bool isUri = Uri.TryCreate(slaveUrl, UriKind.Absolute, out uri) &&
                              (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
